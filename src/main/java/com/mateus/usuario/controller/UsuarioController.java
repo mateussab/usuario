@@ -1,6 +1,8 @@
 package com.mateus.usuario.controller;
 
 import com.mateus.usuario.business.UsuarioService;
+import com.mateus.usuario.business.dto.EnderecoDTO;
+import com.mateus.usuario.business.dto.TelefoneDTO;
 import com.mateus.usuario.business.dto.UsuarioDTO;
 import com.mateus.usuario.infrastructure.entity.Usuario;
 import com.mateus.usuario.infrastructure.security.JwtUtil;
@@ -36,7 +38,7 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public ResponseEntity<Usuario> buscaUsuarioPorEmail(@RequestParam("email") String email){
+    public ResponseEntity<UsuarioDTO> buscaUsuarioPorEmail(@RequestParam("email") String email){
         //faz conversão para uma resposta HTTP correta
         return ResponseEntity.ok(usuarioService.buscarUsuarioPorEmail(email));
     }
@@ -45,6 +47,24 @@ public class UsuarioController {
     public ResponseEntity<Void> deletaUsuarioPorEmail(@PathVariable("email") String email){
         usuarioService.deletarUsuarioPorEmail(email);
         return ResponseEntity.ok().build();
+    }
+
+    @PutMapping
+    public ResponseEntity<UsuarioDTO> atualizaDadosUsuario(@RequestBody UsuarioDTO usuarioDTO,
+                                                        @RequestHeader("Authorization") String token){
+        return ResponseEntity.ok(usuarioService.atualizaDadosUsuario(token, usuarioDTO));
+    }
+
+    @PutMapping("endereco")
+    public ResponseEntity<EnderecoDTO> atualizaEndereco(@RequestBody EnderecoDTO enderecoDTO,
+                                                        @RequestParam("id") Long id){
+        return ResponseEntity.ok(usuarioService.atualizaEndereco(id,enderecoDTO));
+    }
+
+    @PutMapping("telefone")
+    public ResponseEntity<TelefoneDTO> atualizaTelefone(@RequestBody TelefoneDTO telefoneDTO,
+                                                        @RequestParam("id") Long id){
+        return ResponseEntity.ok(usuarioService.atualizaTelefone(id,telefoneDTO));
     }
 
 }
